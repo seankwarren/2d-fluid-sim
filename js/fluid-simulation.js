@@ -816,13 +816,13 @@ function createFluidSimulation(canvas) {
       const prevX = pointer.x;
       const prevY = pointer.y;
       
-      // Update position
-      pointer.x = x;
-      pointer.y = y;
+      // Update position - Fixed: multiply by devicePixelRatio
+      pointer.x = x * window.devicePixelRatio;
+      pointer.y = y * window.devicePixelRatio;
       
       // Calculate movement
-      pointer.dx = (x - prevX) * 10.0;
-      pointer.dy = (y - prevY) * 10.0;
+      pointer.dx = (pointer.x - prevX) * 10.0;
+      pointer.dy = (pointer.y - prevY) * 10.0;
       
       pointer.moved = Math.abs(pointer.dx) > 0 || Math.abs(pointer.dy) > 0;
     }, { passive: false });
@@ -831,8 +831,10 @@ function createFluidSimulation(canvas) {
     e.preventDefault();
     const touch = e.touches[0];
       const rect = canvas.getBoundingClientRect();
-      pointer.x = touch.clientX - rect.left;
-      pointer.y = touch.clientY - rect.top;
+      
+      // Fixed: multiply by devicePixelRatio
+      pointer.x = (touch.clientX - rect.left) * window.devicePixelRatio;
+      pointer.y = (touch.clientY - rect.top) * window.devicePixelRatio;
       pointer.down = true;
       pointer.color = generateColor();
     }, { passive: false });
